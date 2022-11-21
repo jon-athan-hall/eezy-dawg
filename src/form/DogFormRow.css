@@ -1,0 +1,9 @@
+.DogFormRow {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.DogFormRow-control {
+  width: 12rem;
+}
