@@ -1,16 +1,21 @@
-import { Provider } from 'react-redux';
-import store from './store';
-
-import DogForm from './form/DogForm';
+import { useEffect } from 'react';
+import { AppDispatch } from './store';
+import { useDispatch } from 'react-redux';
+import { fetchAllBreeds } from './dog-form/dogFormSlice';
+import DogForm from './dog-form/DogForm';
 import './App.css';
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchAllBreeds());
+  }, []);
+  
   return (
-    <Provider store={store}>
-      <div className="App">
-        <DogForm />
-      </div>
-    </Provider>
+    <div className="App">
+      <DogForm />
+    </div>
   );
 }
 

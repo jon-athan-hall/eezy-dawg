@@ -9,9 +9,9 @@ import './DogFormRow.css';
 interface DogFormRowProps {
   index: number;
   breeds: string[];
-  breedValue: number | undefined;
+  breedValue: number | null;
   subBreeds: string[];
-  subBreedValue: number | undefined;
+  subBreedValue: number | null;
   imageCount: number;
 };
 
@@ -28,13 +28,13 @@ const DogFormRow = ({
   const subBreedLabelId = `sub-breed-label-${index}`;
   const subBreedLabel = `Sub-breed #${index}`;
 
-  const handleBreedChange = (e: SelectChangeEvent<number>) => {
+  const handleBreedChange = (e: SelectChangeEvent<number | null>) => {
     console.log('breed change');
     console.log('trigger Redux change: ', e);
   };
 
   // @TODO These two handlers are pretty similar.
-  const handleSubBreedChange = (e: SelectChangeEvent<number>) => {
+  const handleSubBreedChange = (e: SelectChangeEvent<number | null>) => {
     console.log('sub-breed change');
     console.log('trigger Redux change', e);
   };
@@ -64,7 +64,7 @@ const DogFormRow = ({
           autoWidth={true}
           labelId={breedLabelId}
           id={`breed-select-${index}`}
-          value={breedValue}
+          value={breedValue ? breedValue : ''}
           label={breedLabel}
           onChange={(e) => handleBreedChange(e)}
         >
@@ -79,7 +79,7 @@ const DogFormRow = ({
           disabled={subBreeds.length === 0}
           labelId={subBreedLabelId}
           id={`sub-breed-select-${index}`}
-          value={subBreedValue}
+          value={subBreedValue ? subBreedValue : ''}
           label={subBreedLabel}
           onChange={(e) => handleSubBreedChange(e)}
         >
@@ -90,6 +90,7 @@ const DogFormRow = ({
       <TextField
         className="DogFormRow-control"
         id={`image-count-${index}`}
+        value={imageCount}
         label="Image count"
         type="number"
         onChange={(e) => handleImageCountChange(e)}

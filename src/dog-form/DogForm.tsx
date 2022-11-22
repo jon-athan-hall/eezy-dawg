@@ -1,24 +1,15 @@
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import {
+  selectBreedsDictionary,
+  selectBreeds,
+  selectChoices
+} from './dogFormSlice';
 import DogFormRow from './DogFormRow';
 
-interface BreedDictionary {
-  [key: string]: string[] | never[]
-};
-
-interface RowChoice {
-  breed: number | undefined;
-  subBreed: number | undefined;
-  imageCount: number
-};
-
-const BREEDS = Object.keys(BREEDS_MESSAGE);
-
 const DogForm = (): JSX.Element => {
-  const [rowChoices, setRowChoices] = useState<RowChoice[]>([{
-    breed: 0,
-    subBreed: 0,
-    imageCount: 0
-  }]);
+  const breedsDictionary = useSelector(selectBreedsDictionary);
+  const breeds = useSelector(selectBreeds);
+  const rowChoices = useSelector(selectChoices);
 
   return (
     <form className="DogForm">
@@ -28,13 +19,13 @@ const DogForm = (): JSX.Element => {
          * Otherwise, use the breed value to get the actual breed string, then use that
          * breed string with the dictionary to get the sub-breed array.
          */
-        const subBreeds = (rowChoice.breed === undefined) ? [] : BREEDS_MESSAGE[BREEDS[rowChoice.breed]];
+        const subBreeds = (rowChoice.breed === null) ? [] : breedsDictionary[breeds[rowChoice.breed]];
 
         return (
           <DogFormRow
             key={index}
             index={index}
-            breeds={BREEDS}
+            breeds={breeds}
             breedValue={rowChoice.breed}
             subBreeds={subBreeds}
             subBreedValue={rowChoice.subBreed}
