@@ -1,4 +1,6 @@
 import { ChangeEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateChoice } from './dogFormSlice';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -23,25 +25,36 @@ const DogFormRow = ({
   subBreedValue,
   imageCount = 1
 }: DogFormRowProps): JSX.Element => {
+  const dispatch = useDispatch();
+
   const breedLabelId = `breed-label-${index}`;
   const breedLabel = `Breed #${index}`;
   const subBreedLabelId = `sub-breed-label-${index}`;
   const subBreedLabel = `Sub-breed #${index}`;
 
-  const handleBreedChange = (e: SelectChangeEvent<number | null>) => {
-    console.log('breed change');
-    console.log('trigger Redux change: ', e);
-  };
-
   // @TODO These two handlers are pretty similar.
-  const handleSubBreedChange = (e: SelectChangeEvent<number | null>) => {
-    console.log('sub-breed change');
-    console.log('trigger Redux change', e);
+  const handleBreedChange = (e: SelectChangeEvent<number | null>) => {
+    dispatch(updateChoice({
+      index,
+      key: 'breed',
+      value: e.target.value
+    }));
   };
 
-  const handleImageCountChange = (e: ChangeEvent) => {
-    console.log('image count change');
-    console.log('trigger Redux change:', e);
+  const handleSubBreedChange = (e: SelectChangeEvent<number | null>) => {
+    dispatch(updateChoice({
+      index,
+      key: 'subBreed',
+      value: e.target.value
+    }));
+  };
+
+  const handleImageCountChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    dispatch(updateChoice({
+      index,
+      key: 'imageCount',
+      value: e.target.value
+    }));
   }
 
   /**

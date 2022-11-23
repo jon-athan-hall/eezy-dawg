@@ -58,6 +58,38 @@ export const dogFormSlice = createSlice({
         breeds: Object.keys(state.breedsDictionary)
       }
     },
+    updateChoice: (state, action) => {
+      const { index, key, value } = action.payload;
+
+      /**
+       * Find the choice object based on the payload's index.
+       * Then update the specific key value pair.'
+       * 
+       * For example, one dispatch may update the third form row
+       * to have a "british" sub-breed.
+       * 
+       * That payload would look like:
+       * {
+       *   index: 3,
+       *   key: 'subBreed',
+       *   value: 'british'
+       * }
+       */
+      const choices = state.choices.map((choice, i) => {
+        if (i === index) {
+          const newChoice = { ...choice };
+          newChoice[key as keyof RowChoice] = value;
+          return newChoice;
+        } else {
+          return choice;
+        }
+      });
+
+      return {
+        ...state,
+        choices
+      };
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllBreeds.pending, (state) => {
@@ -78,6 +110,10 @@ export const selectBreedsDictionary = (state: RootState) => state.dogForm.breeds
 export const selectBreeds = (state: RootState) => state.dogForm.breeds;
 export const selectChoices = (state: RootState) => state.dogForm.choices;
 
-export const { buildBreeds } = dogFormSlice.actions;
+export const {
+  loadDictionary,
+  buildBreeds,
+  updateChoice
+} = dogFormSlice.actions;
 
 export default dogFormSlice.reducer;
