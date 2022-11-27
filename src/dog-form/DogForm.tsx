@@ -4,12 +4,18 @@ import {
   selectBreeds,
   selectChoices
 } from './dogFormSlice';
+import { Button } from '@mui/material';
 import DogFormRow from './DogFormRow';
+import './DogForm.css';
 
 const DogForm = (): JSX.Element => {
   const breedsDictionary = useSelector(selectBreedsDictionary);
   const breeds = useSelector(selectBreeds);
   const rowChoices = useSelector(selectChoices);
+
+  const handleGenerateClick = () => {
+    console.log('clicked');
+  };
 
   return (
     <form className="DogForm">
@@ -33,6 +39,13 @@ const DogForm = (): JSX.Element => {
           />
         );
       })}
+      <Button
+        className="DogForm-button"
+        onClick={handleGenerateClick}
+        variant="contained"
+      >
+        Generate
+      </Button>
     </form>
   );
 };

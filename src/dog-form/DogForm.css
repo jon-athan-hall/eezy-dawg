@@ -1,0 +1,9 @@
+.DogForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.DogForm-button {
+  width: 12rem;
+}

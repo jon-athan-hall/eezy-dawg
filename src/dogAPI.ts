@@ -1,3 +1,5 @@
+import { RowChoice } from './types';
+
 const dogAPI = {
   /**
    * Fetches all of the breeds and sub-breeds available 
@@ -10,6 +12,24 @@ const dogAPI = {
       }
     );
 
+    const data = await response.json();
+
+    return data;
+  },
+
+  async getRandomImages(breed: string, subBreed: string, imageCount: number) {
+    let fullBreed = breed;
+
+    if (subBreed !== null) {
+      fullBreed = fullBreed + '-' + subBreed;
+    }
+
+    const response = await fetch(
+      `https://dog.ceo/api/breed/${fullBreed}/images/random/${imageCount}`, {
+        method: 'GET'
+      }
+    );
+    
     const data = await response.json();
 
     return data;
