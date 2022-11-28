@@ -10,7 +10,11 @@ import { Button } from '@mui/material';
 import DogFormRow from './DogFormRow';
 import './DogForm.css';
 
-const DogForm = (): JSX.Element => {
+interface DogFormProps {
+  handleOpen: () => void;
+};
+
+const DogForm = ({ handleOpen }: DogFormProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const breedsDictionary = useSelector(selectBreedsDictionary);
   const breeds = useSelector(selectBreeds);
@@ -18,6 +22,7 @@ const DogForm = (): JSX.Element => {
 
   const handleGenerateClick = () => {
     dispatch(fetchRandomImages({}));
+    handleOpen();
   };
 
   return (

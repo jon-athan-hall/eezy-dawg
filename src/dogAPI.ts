@@ -18,9 +18,11 @@ const dogAPI = {
   async getRandomImages(breed: string, subBreed: string, imageCount: number) {
     let fullBreed = breed;
 
-    if (subBreed !== null) {
+    if ((subBreed !== null) && (subBreed !== undefined)) {
       fullBreed = fullBreed + '/' + subBreed;
     }
+
+    console.log('fullBreed', fullBreed);
 
     const response = await fetch(
       `https://dog.ceo/api/breed/${fullBreed}/images/random/${imageCount}`, {

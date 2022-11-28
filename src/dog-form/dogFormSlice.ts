@@ -157,6 +157,7 @@ export const dogFormSlice = createSlice({
 export const selectBreedsDictionary = (state: RootState) => state.dogForm.breedsDictionary;
 export const selectBreeds = (state: RootState) => state.dogForm.breeds;
 export const selectChoices = (state: RootState) => state.dogForm.choices;
+export const selectImages = (state: RootState) => state.dogForm.images;
 
 export const {
   loadDictionary,
