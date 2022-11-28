@@ -1,5 +1,7 @@
 import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../store';
 import {
+  fetchRandomImages,
   selectBreedsDictionary,
   selectBreeds,
   selectChoices
@@ -9,12 +11,13 @@ import DogFormRow from './DogFormRow';
 import './DogForm.css';
 
 const DogForm = (): JSX.Element => {
+  const dispatch = useAppDispatch();
   const breedsDictionary = useSelector(selectBreedsDictionary);
   const breeds = useSelector(selectBreeds);
   const rowChoices = useSelector(selectChoices);
 
   const handleGenerateClick = () => {
-    console.log('clicked');
+    dispatch(fetchRandomImages({}));
   };
 
   return (

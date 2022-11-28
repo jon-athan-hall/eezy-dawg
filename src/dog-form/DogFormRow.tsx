@@ -30,7 +30,7 @@ const DogFormRow = ({
   const breedLabelId = `breed-label-${index}`;
   const breedLabel = `Breed #${index}`;
   const subBreedLabelId = `sub-breed-label-${index}`;
-  const subBreedLabel = `Sub-breed #${index}`;
+  const subBreedLabel = (subBreeds.length === 0) ? 'No sub-breeds' : `Sub-breed #${index}`;
 
   // @TODO These two handlers are pretty similar.
   const handleBreedChange = (e: SelectChangeEvent<number | null>) => {

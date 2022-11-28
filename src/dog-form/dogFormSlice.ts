@@ -1,6 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { RowChoice } from '../types';
+import {
+  ImagesPayload,
+  RowChoice
+} from '../types';
 import dogAPI from '../dogAPI';
 
 export interface DogFormState {
@@ -10,10 +13,11 @@ export interface DogFormState {
   };
   breeds: string[] | never[];
   choices: RowChoice[];
+  images: string[];
   error: string | null | undefined;
 };
 
-export const fetchAllBreeds = createAsyncThunk('dog/fetchAll',
+export const fetchAllBreeds = createAsyncThunk('dog/fetchBreeds',
   async () => {
     try {
       const data = await dogAPI.getAllBreeds();
@@ -26,15 +30,47 @@ export const fetchAllBreeds = createAsyncThunk('dog/fetchAll',
   }
 );
 
+export const fetchRandomImages = createAsyncThunk<ImagesPayload[], {}, { state: RootState }>('dog/fetchImages',
+  async ({}, thunkAPI) => {
+    const { dogForm } = thunkAPI.getState();
+    const { breedsDictionary, breeds, choices } = dogForm;
+
+    try {
+      const data = await Promise.all(
+        /**
+         * Loop through all choices, and get the actual string values of the breed form choices,
+         * using the breeds array and the breeds dictionary. Send these values along to the API
+         * method for the random images.
+         */
+        choices.map(async (choice) => {
+          if (choice.breed === null) return;
+
+          const breedText = breeds[choice.breed];
+          const subBreedText = choice.subBreed !== null ? breedsDictionary[breedText][choice.subBreed] : null;
+
+          const imageData = await dogAPI.getRandomImages(breedText, subBreedText, choice.imageCount);
+          return imageData;
+        })
+      );
+      return data;
+    } catch (e) {
+      // @TODO Build a better error return here too.
+      console.error(e);
+      throw e;
+    }
+  }
+);
+
 const initialState: DogFormState = {
   status: 'idle',
-  breedsDictionary: {"affenpinscher":[],"african":[],"airedale":[],"akita":[],"appenzeller":[],"australian":["shepherd"],"basenji":[],"beagle":[],"bluetick":[],"borzoi":[],"bouvier":[],"boxer":[],"brabancon":[],"briard":[],"buhund":["norwegian"],"bulldog":["boston","english","french"],"bullterrier":["staffordshire"],"cattledog":["australian"],"chihuahua":[],"chow":[],"clumber":[],"cockapoo":[],"collie":["border"],"coonhound":[],"corgi":["cardigan"],"cotondetulear":[],"dachshund":[],"dalmatian":[],"dane":["great"],"deerhound":["scottish"],"dhole":[],"dingo":[],"doberman":[],"elkhound":["norwegian"],"entlebucher":[],"eskimo":[],"finnish":["lapphund"],"frise":["bichon"],"germanshepherd":[],"golden":[],"greyhound":["italian"],"groenendael":[],"havanese":[],"hound":["afghan","basset","blood","english","ibizan","plott","walker"],"husky":[],"keeshond":[],"kelpie":[],"komondor":[],"kuvasz":[],"labradoodle":[],"labrador":[],"leonberg":[],"lhasa":[],"malamute":[],"malinois":[],"maltese":[],"mastiff":["bull","english","tibetan"],"mexicanhairless":[],"mix":[],"mountain":["bernese","swiss"],"newfoundland":[],"otterhound":[],"ovcharka":["caucasian"],"papillon":[],"pekinese":[],"pembroke":[],"pinscher":["miniature"],"pitbull":[],"pointer":["german","germanlonghair"],"pomeranian":[],"poodle":["medium","miniature","standard","toy"],"pug":[],"puggle":[],"pyrenees":[],"redbone":[],"retriever":["chesapeake","curly","flatcoated","golden"],"ridgeback":["rhodesian"],"rottweiler":[],"saluki":[],"samoyed":[],"schipperke":[],"schnauzer":["giant","miniature"],"segugio":["italian"],"setter":["english","gordon","irish"],"sharpei":[],"sheepdog":["english","shetland"],"shiba":[],"shihtzu":[],"spaniel":["blenheim","brittany","cocker","irish","japanese","sussex","welsh"],"springer":["english"],"stbernard":[],"terrier":["american","australian","bedlington","border","cairn","dandie","fox","irish","kerryblue","lakeland","norfolk","norwich","patterdale","russell","scottish","sealyham","silky","tibetan","toy","welsh","westhighland","wheaten","yorkshire"],"tervuren":[],"vizsla":[],"waterdog":["spanish"],"weimaraner":[],"whippet":[],"wolfhound":["irish"]},
+  breedsDictionary: {},
   breeds: [],
   choices: [{
     breed: null,
     subBreed: null,
     imageCount: 1
   }],
+  images: [],
   error: null
 };
 
@@ -100,6 +136,18 @@ export const dogFormSlice = createSlice({
       state.breeds = Object.keys(action.payload.message);
     });
     builder.addCase(fetchAllBreeds.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    });
+    builder.addCase(fetchRandomImages.pending, (state) => {
+      state.status = 'loading';
+    });
+    builder.addCase(fetchRandomImages.fulfilled, (state, action) => {
+      let images: string[] = [];
+      action.payload.map((imagesPayload) => images.push(...imagesPayload.message));
+      state.images = images;
+    });
+    builder.addCase(fetchRandomImages.rejected, (state, action) => {
       state.status = 'failed';
       state.error = action.error.message;
     });

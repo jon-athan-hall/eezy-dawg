@@ -1,5 +1,3 @@
-import { RowChoice } from './types';
-
 const dogAPI = {
   /**
    * Fetches all of the breeds and sub-breeds available 
@@ -21,7 +19,7 @@ const dogAPI = {
     let fullBreed = breed;
 
     if (subBreed !== null) {
-      fullBreed = fullBreed + '-' + subBreed;
+      fullBreed = fullBreed + '/' + subBreed;
     }
 
     const response = await fetch(
