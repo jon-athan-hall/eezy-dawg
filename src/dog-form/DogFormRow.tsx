@@ -82,7 +82,7 @@ const DogFormRow = ({
           autoWidth={true}
           labelId={breedLabelId}
           id={`breed-select-${index}`}
-          value={breedValue ? breedValue : ''}
+          value={(breedValue !== null) ? breedValue : ''}
           label={breedLabel}
           onChange={(e) => handleBreedChange(e)}
         >
@@ -97,7 +97,7 @@ const DogFormRow = ({
           disabled={subBreeds.length === 0}
           labelId={subBreedLabelId}
           id={`sub-breed-select-${index}`}
-          value={subBreedValue ? subBreedValue : ''}
+          value={(subBreedValue !== null) ? subBreedValue : ''}
           label={subBreedLabel}
           onChange={(e) => handleSubBreedChange(e)}
         >
