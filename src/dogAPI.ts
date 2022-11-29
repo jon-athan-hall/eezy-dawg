@@ -22,8 +22,6 @@ const dogAPI = {
       fullBreed = fullBreed + '/' + subBreed;
     }
 
-    console.log('fullBreed', fullBreed);
-
     const response = await fetch(
       `https://dog.ceo/api/breed/${fullBreed}/images/random/${imageCount}`, {
         method: 'GET'

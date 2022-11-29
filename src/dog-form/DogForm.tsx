@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../store';
 import {
+  addChoice,
   fetchRandomImages,
   selectBreedsDictionary,
   selectBreeds,
@@ -19,6 +20,14 @@ const DogForm = ({ handleOpen }: DogFormProps): JSX.Element => {
   const breedsDictionary = useSelector(selectBreedsDictionary);
   const breeds = useSelector(selectBreeds);
   const rowChoices = useSelector(selectChoices);
+
+  /**
+   * Add a new, empty choice object of breed, sub-breed, and image count
+   * (and therefore a new DogFormRow too).
+   */
+  const handleAddClick = () => {
+    dispatch(addChoice());
+  }
 
   const handleGenerateClick = () => {
     dispatch(fetchRandomImages({}));
@@ -47,6 +56,7 @@ const DogForm = ({ handleOpen }: DogFormProps): JSX.Element => {
           />
         );
       })}
+      <Button onClick={handleAddClick} variant="contained">+</Button>
       <Button
         className="DogForm-button"
         onClick={handleGenerateClick}

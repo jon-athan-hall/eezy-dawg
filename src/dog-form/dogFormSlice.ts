@@ -61,15 +61,17 @@ export const fetchRandomImages = createAsyncThunk<ImagesPayload[], {}, { state: 
   }
 );
 
+const initialChoiceState: RowChoice = {
+  breed: null,
+  subBreed: null,
+  imageCount: 1
+}
+
 const initialState: DogFormState = {
   status: 'idle',
   breedsDictionary: {},
   breeds: [],
-  choices: [{
-    breed: null,
-    subBreed: null,
-    imageCount: 1
-  }],
+  choices: [initialChoiceState], // One DogFormRow to start.
   images: [],
   error: null
 };
@@ -92,6 +94,15 @@ export const dogFormSlice = createSlice({
       return {
         ...state,
         breeds: Object.keys(state.breedsDictionary)
+      }
+    },
+    addChoice: (state) => {
+      const choices = [...state.choices];
+      choices.push(initialChoiceState);
+      
+      return {
+        ...state,
+        choices
       }
     },
     updateChoice: (state, action) => {
@@ -162,7 +173,8 @@ export const selectImages = (state: RootState) => state.dogForm.images;
 export const {
   loadDictionary,
   buildBreeds,
-  updateChoice
+  addChoice,
+  updateChoice,
 } = dogFormSlice.actions;
 
 export default dogFormSlice.reducer;

@@ -27,12 +27,17 @@ const DogFormRow = ({
 }: DogFormRowProps): JSX.Element => {
   const dispatch = useDispatch();
 
+  // Assorted values for the select dropdown labels.
   const breedLabelId = `breed-label-${index}`;
   const breedLabel = `Breed #${index}`;
   const subBreedLabelId = `sub-breed-label-${index}`;
   const subBreedLabel = (subBreeds.length === 0) ? 'No sub-breeds' : `Sub-breed #${index}`;
 
-  // @TODO These two handlers are pretty similar.
+  /**
+   * @TODO These three handlers are pretty similar.
+   * They each update a specific piece of a choice object: breed, sub-breed,
+   * or image count.
+   */
   const handleBreedChange = (e: SelectChangeEvent<number | null>) => {
     dispatch(updateChoice({
       index,
@@ -61,12 +66,12 @@ const DogFormRow = ({
    * Each breed option's value is the index of the breed
    * in the big breed array that's passed in as a prop.
    */
-  const breedMenuItems = breeds.map((breed, index) => (
-    <MenuItem key={index} value={index}>{breed}</MenuItem>
+  const breedMenuItems = breeds.map((breed, i) => (
+    <MenuItem key={i} value={i}>{breed}</MenuItem>
   ));
 
-  const subBreedMenuItems = subBreeds.map((subBreed, index) => (
-    <MenuItem key={index} value={index}>{subBreed}</MenuItem>
+  const subBreedMenuItems = subBreeds.map((subBreed, i) => (
+    <MenuItem key={i} value={i}>{subBreed}</MenuItem>
   ));
 
   return (
