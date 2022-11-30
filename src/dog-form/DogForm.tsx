@@ -56,7 +56,13 @@ const DogForm = ({ handleOpen }: DogFormProps): JSX.Element => {
           />
         );
       })}
-      <Button onClick={handleAddClick} variant="contained">+</Button>
+      <Button
+        className="DogForm-button"
+        onClick={handleAddClick}
+        variant="contained"
+      >
+        +
+      </Button>
       <Button
         className="DogForm-button"
         onClick={handleGenerateClick}
