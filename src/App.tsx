@@ -26,6 +26,7 @@ function App() {
   
   return (
     <div className="App">
+      <h1>Dog Poster Generator</h1>
       <Modal
         open={open}
         onClose={handleClose}

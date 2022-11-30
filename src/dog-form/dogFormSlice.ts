@@ -43,7 +43,7 @@ export const fetchRandomImages = createAsyncThunk<ImagesPayload[], {}, { state: 
          * method for the random images.
          */
         choices.map(async (choice) => {
-          if (choice.breed === null) return;
+          if (choice.breed === null || choice.imageCount === 0) return;
 
           const breedText = breeds[choice.breed];
           const subBreedText = choice.subBreed !== null ? breedsDictionary[breedText][choice.subBreed] : null;
@@ -155,7 +155,12 @@ export const dogFormSlice = createSlice({
     });
     builder.addCase(fetchRandomImages.fulfilled, (state, action) => {
       let images: string[] = [];
-      action.payload.map((imagesPayload) => images.push(...imagesPayload.message));
+      console.log(action.payload);
+      action.payload.map((imagesPayload) => {
+        if (imagesPayload !== undefined) {
+          images.push(...imagesPayload.message);
+        }
+      });
       state.images = images;
     });
     builder.addCase(fetchRandomImages.rejected, (state, action) => {

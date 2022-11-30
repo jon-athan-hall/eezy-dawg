@@ -6,16 +6,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import { DogFormRowProps } from '../types';
 import './DogFormRow.css';
-
-interface DogFormRowProps {
-  index: number;
-  breeds: string[];
-  breedValue: number | null;
-  subBreeds: string[];
-  subBreedValue: number | null;
-  imageCount: number;
-};
 
 const DogFormRow = ({
   index,
@@ -82,7 +74,7 @@ const DogFormRow = ({
           autoWidth={true}
           labelId={breedLabelId}
           id={`breed-select-${index}`}
-          value={(breedValue !== null) ? breedValue : ''}
+          value={(breedValue !== null) ? breedValue : ""}
           label={breedLabel}
           onChange={(e) => handleBreedChange(e)}
         >
@@ -97,9 +89,10 @@ const DogFormRow = ({
           disabled={subBreeds.length === 0}
           labelId={subBreedLabelId}
           id={`sub-breed-select-${index}`}
-          value={(subBreedValue !== null) ? subBreedValue : ''}
+          value={(subBreedValue !== null) ? subBreedValue : ""}
           label={subBreedLabel}
           onChange={(e) => handleSubBreedChange(e)}
+          data-testid="sub-breeds-select"
         >
           {subBreedMenuItems}
         </Select>
