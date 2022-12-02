@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import {
   ImagesPayload,
@@ -31,7 +31,7 @@ export const fetchAllBreeds = createAsyncThunk('dog/fetchBreeds',
 );
 
 export const fetchRandomImages = createAsyncThunk<ImagesPayload[], {}, { state: RootState }>('dog/fetchImages',
-  async ({}, thunkAPI) => {
+  async (params = {}, thunkAPI) => {
     const { dogForm } = thunkAPI.getState();
     const { breedsDictionary, breeds, choices } = dogForm;
 
@@ -155,12 +155,13 @@ export const dogFormSlice = createSlice({
     });
     builder.addCase(fetchRandomImages.fulfilled, (state, action) => {
       let images: string[] = [];
-      console.log(action.payload);
-      action.payload.map((imagesPayload) => {
+
+      for (const imagesPayload of action.payload) {
         if (imagesPayload !== undefined) {
           images.push(...imagesPayload.message);
         }
-      });
+      }
+
       state.images = images;
     });
     builder.addCase(fetchRandomImages.rejected, (state, action) => {

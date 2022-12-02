@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../store';
 import {
@@ -5,9 +6,11 @@ import {
   fetchRandomImages,
   selectBreedsDictionary,
   selectBreeds,
-  selectChoices
+  selectChoices,
+  updateChoice
 } from './dogFormSlice';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
+import { SelectChangeEvent } from '@mui/material/Select';
 import DogFormRow from './DogFormRow';
 import './DogForm.css';
 
@@ -34,6 +37,35 @@ const DogForm = ({ handleOpen }: DogFormProps): JSX.Element => {
     handleOpen();
   };
 
+    /**
+   * @TODO These three handlers are pretty similar.
+   * They each update a specific piece of a choice object: breed, sub-breed,
+   * or image count.
+   */
+  const handleBreedChange = (e: SelectChangeEvent<number | null>, index: number) => {
+    dispatch(updateChoice({
+      index,
+      key: 'breed',
+      value: e.target.value
+    }));
+  };
+
+  const handleSubBreedChange = (e: SelectChangeEvent<number | null>, index: number) => {
+    dispatch(updateChoice({
+      index,
+      key: 'subBreed',
+      value: e.target.value
+    }));
+  };
+
+  const handleImageCountChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+    dispatch(updateChoice({
+      index,
+      key: 'imageCount',
+      value: e.target.value
+    }));
+  }
+
   return (
     <form className="DogForm">
       {rowChoices.map((rowChoice, index) => {
@@ -50,9 +82,12 @@ const DogForm = ({ handleOpen }: DogFormProps): JSX.Element => {
             index={index}
             breeds={breeds}
             breedValue={rowChoice.breed}
+            handleBreedChange={handleBreedChange}
             subBreeds={subBreeds}
             subBreedValue={rowChoice.subBreed}
+            handleSubBreedChange={handleSubBreedChange}
             imageCount={rowChoice.imageCount}
+            handleImageCountChange={handleImageCountChange}
           />
         );
       })}

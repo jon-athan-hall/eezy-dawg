@@ -1,10 +1,7 @@
-import { ChangeEvent } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateChoice } from './dogFormSlice';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { DogFormRowProps } from '../types';
 import './DogFormRow.css';
@@ -13,46 +10,18 @@ const DogFormRow = ({
   index,
   breeds,
   breedValue,
+  handleBreedChange,
   subBreeds,
   subBreedValue,
-  imageCount = 1
+  handleSubBreedChange,
+  imageCount = 1,
+  handleImageCountChange
 }: DogFormRowProps): JSX.Element => {
-  const dispatch = useDispatch();
-
   // Assorted values for the select dropdown labels.
   const breedLabelId = `breed-label-${index}`;
   const breedLabel = `Breed #${index}`;
   const subBreedLabelId = `sub-breed-label-${index}`;
   const subBreedLabel = (subBreeds.length === 0) ? 'No sub-breeds' : `Sub-breed #${index}`;
-
-  /**
-   * @TODO These three handlers are pretty similar.
-   * They each update a specific piece of a choice object: breed, sub-breed,
-   * or image count.
-   */
-  const handleBreedChange = (e: SelectChangeEvent<number | null>) => {
-    dispatch(updateChoice({
-      index,
-      key: 'breed',
-      value: e.target.value
-    }));
-  };
-
-  const handleSubBreedChange = (e: SelectChangeEvent<number | null>) => {
-    dispatch(updateChoice({
-      index,
-      key: 'subBreed',
-      value: e.target.value
-    }));
-  };
-
-  const handleImageCountChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    dispatch(updateChoice({
-      index,
-      key: 'imageCount',
-      value: e.target.value
-    }));
-  }
 
   /**
    * Each breed option's value is the index of the breed
@@ -76,7 +45,7 @@ const DogFormRow = ({
           id={`breed-select-${index}`}
           value={(breedValue !== null) ? breedValue : ""}
           label={breedLabel}
-          onChange={(e) => handleBreedChange(e)}
+          onChange={(e) => handleBreedChange(e, index)}
         >
           {breedMenuItems}
         </Select>
@@ -91,8 +60,7 @@ const DogFormRow = ({
           id={`sub-breed-select-${index}`}
           value={(subBreedValue !== null) ? subBreedValue : ""}
           label={subBreedLabel}
-          onChange={(e) => handleSubBreedChange(e)}
-          data-testid="sub-breeds-select"
+          onChange={(e) => handleSubBreedChange(e, index)}
         >
           {subBreedMenuItems}
         </Select>
@@ -104,7 +72,7 @@ const DogFormRow = ({
         value={imageCount}
         label="Image count"
         type="number"
-        onChange={(e) => handleImageCountChange(e)}
+        onChange={(e) => handleImageCountChange(e, index)}
       />
     </div>
   )
